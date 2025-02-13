@@ -43,9 +43,9 @@ export const ImageUpload = ({ onImageUpload, isLoading }: ImageUploadProps) => {
       <div
         {...getRootProps()}
         className={cn(
-          "border-2 border-dashed rounded-xl p-8 transition-all duration-300",
-          "hover:border-primary/50 hover:bg-accent/50",
-          isDragActive ? "border-primary bg-accent" : "border-border",
+          "border-2 border-dashed rounded-xl p-8 transition-all duration-300 bg-white/80",
+          "hover:border-primary/50 hover:bg-white/90",
+          isDragActive ? "border-primary bg-white/90" : "border-gray-200",
           isLoading && "opacity-50 cursor-not-allowed"
         )}
       >
@@ -61,16 +61,16 @@ export const ImageUpload = ({ onImageUpload, isLoading }: ImageUploadProps) => {
             </div>
           ) : (
             <>
-              <div className="p-4 bg-background rounded-full border-2">
-                <Upload className="w-8 h-8 text-primary" />
+              <div className="p-4 bg-green-50 rounded-full">
+                <Upload className="w-8 h-8 text-green-600" />
               </div>
               <div className="text-center">
-                <p className="text-lg font-medium">Drop your crop image here</p>
-                <p className="text-sm text-muted-foreground mt-1">
+                <p className="text-lg font-medium text-gray-800">Drop your pest image here</p>
+                <p className="text-sm text-gray-500 mt-1">
                   or click to select a file
                 </p>
               </div>
-              <div className="flex items-center justify-center space-x-2 text-sm text-muted-foreground">
+              <div className="flex items-center justify-center space-x-2 text-sm text-gray-500">
                 <ImageIcon className="w-4 h-4" />
                 <span>JPG, PNG or WEBP (max. 5MB)</span>
               </div>
@@ -81,7 +81,7 @@ export const ImageUpload = ({ onImageUpload, isLoading }: ImageUploadProps) => {
       {isLoading && (
         <div className="space-y-2">
           <Progress value={40} className="h-2" />
-          <p className="text-sm text-center text-muted-foreground">
+          <p className="text-sm text-center text-gray-500">
             Analyzing image...
           </p>
         </div>
