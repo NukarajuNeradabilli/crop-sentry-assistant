@@ -6,6 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
 import { Cloud, ChartBar, Sprout } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
 
 interface AnalysisResult {
   pestName?: string;
@@ -14,17 +15,6 @@ interface AnalysisResult {
   recommendations?: {
     pesticides: Array<{ name: string; description: string }>;
     fertilizers: Array<{ name: string; description: string }>;
-  };
-  yieldPrediction?: {
-    estimated: number;
-    unit: string;
-  };
-  weather?: {
-    forecast: Array<{
-      date: string;
-      condition: string;
-      temperature: number;
-    }>;
   };
 }
 
@@ -35,11 +25,24 @@ const Index = () => {
 
   const handleImageUpload = async (file: File) => {
     setLoading(true);
+    const formData = new FormData();
+    formData.append('image', file);
+
     try {
-      // Backend integration will be added here
+      const response = await fetch('http://localhost:5000/api/analyze', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to analyze image');
+      }
+
+      const data = await response.json();
+      setResult(data);
       toast({
-        title: "Image received",
-        description: "Analysis will be integrated soon.",
+        title: "Analysis Complete",
+        description: `Detected: ${data.pestName}`,
       });
     } catch (error) {
       toast({
@@ -80,8 +83,7 @@ const Index = () => {
           </h1>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
             Upload an image of the pest affecting your crops or enter crop conditions manually.
-            We'll help identify pests and provide sustainable solutions, including fertilizer
-            recommendations.
+            We'll help identify pests and provide sustainable solutions.
           </p>
         </div>
 
@@ -92,7 +94,42 @@ const Index = () => {
           </TabsList>
 
           <TabsContent value="image" className="mt-6">
-            <ImageUpload onImageUpload={handleImageUpload} isLoading={loading} />
+            <div className="space-y-6">
+              <ImageUpload onImageUpload={handleImageUpload} isLoading={loading} />
+              {result && (
+                <div className="max-w-2xl mx-auto bg-white/80 p-6 rounded-lg shadow-sm">
+                  <h3 className="text-xl font-semibold mb-4">Analysis Results</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <p className="text-sm text-gray-600">Detected Pest</p>
+                      <p className="font-medium">{result.pestName}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-600">Confidence</p>
+                      <Progress value={result.confidence ? result.confidence * 100 : 0} className="h-2" />
+                      <p className="text-sm mt-1">{result.confidence ? `${(result.confidence * 100).toFixed(1)}%` : '0%'}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-600">Severity</p>
+                      <p className="font-medium capitalize">{result.severity}</p>
+                    </div>
+                    {result.recommendations?.pesticides.length > 0 && (
+                      <div>
+                        <p className="text-sm text-gray-600 mb-2">Recommended Pesticides</p>
+                        <ul className="space-y-2">
+                          {result.recommendations.pesticides.map((pesticide, index) => (
+                            <li key={index} className="bg-green-50 p-3 rounded">
+                              <p className="font-medium">{pesticide.name}</p>
+                              <p className="text-sm text-gray-600">{pesticide.description}</p>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
           </TabsContent>
 
           <TabsContent value="manual" className="mt-6">
