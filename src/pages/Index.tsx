@@ -86,10 +86,9 @@ const Index = () => {
         </div>
 
         <Tabs defaultValue="image" className="w-full">
-          <TabsList className="grid w-full max-w-2xl mx-auto grid-cols-3 bg-white/50">
+          <TabsList className="grid w-full max-w-2xl mx-auto grid-cols-2 bg-white/50">
             <TabsTrigger value="image">Image Upload</TabsTrigger>
             <TabsTrigger value="manual">Manual Input</TabsTrigger>
-            <TabsTrigger value="fertilizer">Fertilizer Recommendation</TabsTrigger>
           </TabsList>
 
           <TabsContent value="image" className="mt-6">
