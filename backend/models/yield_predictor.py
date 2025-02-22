@@ -11,15 +11,34 @@ class YieldPredictor:
         self.label_encoders = self._load_encoders()
 
     def _load_model(self):
-        return pickle.load("crop_yield_model.pkl")
+        try:
+            model_path = "crop_yield_model.pkl"
+            if not os.path.exists(model_path):
+                raise FileNotFoundError(f"Model file not found at {model_path}")
+            return joblib.load(model_path)
+        except Exception as e:
+            print(f"Error loading model: {str(e)}")
+            raise
 
     def _load_scaler(self):
-        with open("scaler.pkl", "rb") as scaler_file:
-            return pickle.load(scaler_file)
+        try:
+            scaler_path = "scaler.pkl"
+            if not os.path.exists(scaler_path):
+                raise FileNotFoundError(f"Scaler file not found at {scaler_path}")
+            return joblib.load(scaler_path)
+        except Exception as e:
+            print(f"Error loading scaler: {str(e)}")
+            raise
 
     def _load_encoders(self):
-        with open("label_encoders.pkl", "rb") as encoders_file:
-            return pickle.load(encoders_file)
+        try:
+            encoders_path = "label_encoders.pkl"
+            if not os.path.exists(encoders_path):
+                raise FileNotFoundError(f"Label encoders file not found at {encoders_path}")
+            return joblib.load(encoders_path)
+        except Exception as e:
+            print(f"Error loading encoders: {str(e)}")
+            raise
 
     def predict(self, input_data):
         try:
