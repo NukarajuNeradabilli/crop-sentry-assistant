@@ -50,18 +50,19 @@ class YieldPredictor:
             
             # Fill the array with values in the correct order
             for i, feature in enumerate(feature_names):
-                value = input_data.get(feature, 0)
-                # Handle categorical variables
+                # For categorical variables, we don't want to use a default value
                 if feature in self.label_encoders:
+                    if feature not in input_data:
+                        raise ValueError(f"Missing required categorical feature: {feature}")
                     try:
-                        value = self.label_encoders[feature].transform([str(value)])[0]
+                        value = self.label_encoders[feature].transform([str(input_data[feature])])[0]
                     except ValueError as e:
-                        print(f"Error encoding {feature}: {str(e)}")
-                        raise
+                        print(f"Error encoding {feature}: The value '{input_data[feature]}' is not in the trained categories")
+                        raise ValueError(f"Invalid value for {feature}: {input_data[feature]}")
                 else:
-                    # Convert numerical values
+                    # For numerical values, default to 0 if missing
                     try:
-                        value = float(value)
+                        value = float(input_data.get(feature, 0))
                     except ValueError as e:
                         print(f"Error converting {feature} to float: {str(e)}")
                         raise
@@ -77,3 +78,4 @@ class YieldPredictor:
         except Exception as e:
             print(f"Prediction error: {str(e)}")
             raise
+
