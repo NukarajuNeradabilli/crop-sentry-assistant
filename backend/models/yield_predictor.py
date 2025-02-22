@@ -42,15 +42,33 @@ class YieldPredictor:
 
     def predict(self, input_data):
         try:
-            # Convert categorical inputs using label encoders
-            input_values = []
-            for feature, value in input_data.items():
+            # Get the feature names from the scaler
+            feature_names = self.scaler.feature_names_in_
+            
+            # Initialize array with zeros
+            input_values = np.zeros(len(feature_names))
+            
+            # Fill the array with values in the correct order
+            for i, feature in enumerate(feature_names):
+                value = input_data.get(feature, 0)
+                # Handle categorical variables
                 if feature in self.label_encoders:
-                    value = self.label_encoders[feature].transform([value])[0]
-                input_values.append(value)
+                    try:
+                        value = self.label_encoders[feature].transform([str(value)])[0]
+                    except ValueError as e:
+                        print(f"Error encoding {feature}: {str(e)}")
+                        raise
+                else:
+                    # Convert numerical values
+                    try:
+                        value = float(value)
+                    except ValueError as e:
+                        print(f"Error converting {feature} to float: {str(e)}")
+                        raise
+                input_values[i] = value
 
-            # Convert to numpy array and scale
-            input_array = np.array(input_values).reshape(1, -1)
+            # Reshape and scale
+            input_array = input_values.reshape(1, -1)
             scaled_input = self.scaler.transform(input_array)
 
             # Make prediction
