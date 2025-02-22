@@ -11,15 +11,25 @@ class YieldPredictor:
         self.label_encoders = self._load_encoders()
 
     def _load_model(self):
-        return joblib.load("crop_yield_model.pkl")
+        try:
+            return joblib.load("crop_yield_model.pkl")
+        except Exception as e:
+            print(f"Error loading model: {str(e)}")
+            raise
 
     def _load_scaler(self):
-        with open("scaler.pkl", "rb") as scaler_file:
-            return pickle.load(scaler_file)
+        try:
+            return joblib.load("scaler.pkl")
+        except Exception as e:
+            print(f"Error loading scaler: {str(e)}")
+            raise
 
     def _load_encoders(self):
-        with open("label_encoders.pkl", "rb") as encoders_file:
-            return pickle.load(encoders_file)
+        try:
+            return joblib.load("label_encoders.pkl")
+        except Exception as e:
+            print(f"Error loading encoders: {str(e)}")
+            raise
 
     def predict(self, input_data):
         try:
