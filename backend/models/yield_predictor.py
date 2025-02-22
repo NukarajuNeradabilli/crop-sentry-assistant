@@ -11,7 +11,7 @@ class YieldPredictor:
         self.label_encoders = self._load_encoders()
 
     def _load_model(self):
-        return joblib.load("crop_yield_model.pkl")
+        return pickle.load("crop_yield_model.pkl")
 
     def _load_scaler(self):
         with open("scaler.pkl", "rb") as scaler_file:
