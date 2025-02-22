@@ -12,21 +12,30 @@ class YieldPredictor:
 
     def _load_model(self):
         try:
-            return joblib.load("crop_yield_model.pkl")
+            model_path = "crop_yield_model.pkl"
+            if not os.path.exists(model_path):
+                raise FileNotFoundError(f"Model file not found at {model_path}")
+            return joblib.load(model_path)
         except Exception as e:
             print(f"Error loading model: {str(e)}")
             raise
 
     def _load_scaler(self):
         try:
-            return joblib.load("scaler.pkl")
+            scaler_path = "scaler.pkl"
+            if not os.path.exists(scaler_path):
+                raise FileNotFoundError(f"Scaler file not found at {scaler_path}")
+            return joblib.load(scaler_path)
         except Exception as e:
             print(f"Error loading scaler: {str(e)}")
             raise
 
     def _load_encoders(self):
         try:
-            return joblib.load("label_encoders.pkl")
+            encoders_path = "label_encoders.pkl"
+            if not os.path.exists(encoders_path):
+                raise FileNotFoundError(f"Label encoders file not found at {encoders_path}")
+            return joblib.load(encoders_path)
         except Exception as e:
             print(f"Error loading encoders: {str(e)}")
             raise
