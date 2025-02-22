@@ -18,30 +18,18 @@ interface ManualInputProps {
   isLoading?: boolean;
 }
 
-interface YieldPredictionData {
-  cropType: string;
-  soil: string;
-  area: number;
-  annualRainfall: number;
-  fertilizer: number;
-  pesticide: number;
-  temperature: number;
-  humidity: number;
-}
-
 export const ManualInput = ({ onSubmit, isLoading }: ManualInputProps) => {
-  const [formData, setFormData] = useState<YieldPredictionData>({
-    cropType: "",
+  const [formData, setFormData] = useState({
     soil: "",
-    area: 0,
-    annualRainfall: 0,
-    fertilizer: 0,
-    pesticide: 0,
-    temperature: 0,
-    humidity: 0,
+    water: "",
+    weather: "",
+    cropType: "",
+    temperature: "",
+    humidity: "",
+    rainfall: "",
   });
 
-  const handleChange = (field: keyof YieldPredictionData, value: string | number) => {
+  const handleChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -89,73 +77,14 @@ export const ManualInput = ({ onSubmit, isLoading }: ManualInputProps) => {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="area">Area (hectares)</Label>
-            <Input
-              id="area"
-              type="number"
-              placeholder="Enter area"
-              value={formData.area}
-              onChange={(e) => handleChange("area", parseFloat(e.target.value))}
-              required
-              min="0"
-              step="0.1"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="annualRainfall">Annual Rainfall (mm)</Label>
-            <Input
-              id="annualRainfall"
-              type="number"
-              placeholder="Enter annual rainfall"
-              value={formData.annualRainfall}
-              onChange={(e) => handleChange("annualRainfall", parseFloat(e.target.value))}
-              required
-              min="0"
-              step="0.1"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="fertilizer">Fertilizer (kg/hectare)</Label>
-            <Input
-              id="fertilizer"
-              type="number"
-              placeholder="Enter fertilizer amount"
-              value={formData.fertilizer}
-              onChange={(e) => handleChange("fertilizer", parseFloat(e.target.value))}
-              required
-              min="0"
-              step="0.1"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="pesticide">Pesticide (kg/hectare)</Label>
-            <Input
-              id="pesticide"
-              type="number"
-              placeholder="Enter pesticide amount"
-              value={formData.pesticide}
-              onChange={(e) => handleChange("pesticide", parseFloat(e.target.value))}
-              required
-              min="0"
-              step="0.1"
-            />
-          </div>
-
-          <div className="space-y-2">
             <Label htmlFor="temperature">Temperature (°C)</Label>
             <Input
               id="temperature"
               type="number"
               placeholder="Enter temperature"
               value={formData.temperature}
-              onChange={(e) => handleChange("temperature", parseFloat(e.target.value))}
+              onChange={(e) => handleChange("temperature", e.target.value)}
               required
-              min="-50"
-              max="60"
-              step="0.1"
             />
           </div>
 
@@ -166,17 +95,41 @@ export const ManualInput = ({ onSubmit, isLoading }: ManualInputProps) => {
               type="number"
               placeholder="Enter humidity"
               value={formData.humidity}
-              onChange={(e) => handleChange("humidity", parseFloat(e.target.value))}
+              onChange={(e) => handleChange("humidity", e.target.value)}
               required
-              min="0"
-              max="100"
-              step="1"
             />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="rainfall">Rainfall (mm)</Label>
+            <Input
+              id="rainfall"
+              type="number"
+              placeholder="Enter rainfall"
+              value={formData.rainfall}
+              onChange={(e) => handleChange("rainfall", e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="water">Irrigation Type</Label>
+            <Select onValueChange={(value) => handleChange("water", value)} required>
+              <SelectTrigger>
+                <SelectValue placeholder="Select irrigation type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="drip">Drip Irrigation</SelectItem>
+                <SelectItem value="sprinkler">Sprinkler System</SelectItem>
+                <SelectItem value="flood">Flood Irrigation</SelectItem>
+                <SelectItem value="rainfed">Rainfed</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
 
         <Button type="submit" className="w-full" disabled={isLoading}>
-          {isLoading ? "Analyzing..." : "Predict Yield"}
+          {isLoading ? "Analyzing..." : "Analyze Conditions"}
         </Button>
       </form>
 
@@ -185,9 +138,9 @@ export const ManualInput = ({ onSubmit, isLoading }: ManualInputProps) => {
           <CardContent className="p-6 flex items-center space-x-4">
             <Cloud className="w-8 h-8 text-sky-500" />
             <div>
-              <h3 className="font-semibold text-lg">Weather Analysis</h3>
+              <h3 className="font-semibold text-lg">Weather Forecast</h3>
               <p className="text-sm text-muted-foreground">
-                Impact of weather conditions on crop yield
+                5-day weather prediction for your location
               </p>
             </div>
           </CardContent>
@@ -199,7 +152,7 @@ export const ManualInput = ({ onSubmit, isLoading }: ManualInputProps) => {
             <div>
               <h3 className="font-semibold text-lg">Yield Prediction</h3>
               <p className="text-sm text-muted-foreground">
-                Estimated crop yield based on inputs
+                Estimated crop yield based on conditions
               </p>
             </div>
           </CardContent>

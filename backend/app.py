@@ -1,9 +1,9 @@
+
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from config import Config
 from models.pest_classifier import PestClassifier
 from models.pesticide_recommender import PesticideRecommender
-from models.yield_predictor import YieldPredictor
 from utils.file_handler import allowed_file, save_file, cleanup_file
 
 app = Flask(__name__)
@@ -13,7 +13,6 @@ app.config.from_object(Config)
 # Initialize models
 pest_classifier = PestClassifier(Config.MODEL_PATH)
 pesticide_recommender = PesticideRecommender(Config.CSV_PATH)
-yield_predictor = YieldPredictor(Config.YIELD_MODEL_PATH, Config.YIELD_DATASET_PATH)
 
 @app.route('/api/analyze', methods=['POST'])
 def analyze_image():
@@ -54,23 +53,6 @@ def analyze_image():
             cleanup_file(filepath)
     
     return jsonify({'error': 'Invalid file type'}), 400
-
-@app.route('/api/predict-yield', methods=['POST'])
-def predict_yield():
-    try:
-        data = request.json
-        if not data:
-            return jsonify({'error': 'No data provided'}), 400
-        
-        prediction = yield_predictor.predict(data)
-        
-        return jsonify({
-            'prediction': prediction,
-            'unit': 'kg per hectare'
-        })
-        
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
