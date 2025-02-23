@@ -239,7 +239,7 @@ export const ManualInput = ({ onSubmit, isLoading }: ManualInputProps) => {
         </Card>
       )}
 
-      <div className="grid gap-6 md:grid-cols-2">
+      {/* <div className="grid gap-6 md:grid-cols-2">
         <Card className="hover:shadow-lg transition-shadow duration-300">
           <CardContent className="p-6 flex items-center space-x-4">
             <Cloud className="w-8 h-8 text-sky-500" />
@@ -263,7 +263,7 @@ export const ManualInput = ({ onSubmit, isLoading }: ManualInputProps) => {
             </div>
           </CardContent>
         </Card>
-      </div>
+      </div> */}
     </div>
   );
 };
