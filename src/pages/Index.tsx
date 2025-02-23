@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { ImageUpload } from "@/components/ImageUpload";
 import { ManualInput } from "@/components/ManualInput";
@@ -151,7 +150,7 @@ const Index = () => {
           </TabsContent>
         </Tabs>
 
-        <div className="grid gap-6 md:grid-cols-3 max-w-5xl mx-auto">
+        <div className="grid gap-6 md:grid-cols-2 max-w-5xl mx-auto">
           <Card className="bg-white/80 hover:bg-white/90 transition-colors">
             <CardContent className="p-6 flex items-center space-x-4">
               <Cloud className="w-6 h-6 text-blue-500" />
@@ -167,15 +166,6 @@ const Index = () => {
               <div>
                 <h3 className="font-medium">Yield Estimate</h3>
                 <p className="text-sm text-gray-500">View predicted crop yield</p>
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="bg-white/80 hover:bg-white/90 transition-colors">
-            <CardContent className="p-6 flex items-center space-x-4">
-              <Sprout className="w-6 h-6 text-green-600" />
-              <div>
-                <h3 className="font-medium">Pest Database</h3>
-                <p className="text-sm text-gray-500">Report unknown pests</p>
               </div>
             </CardContent>
           </Card>
