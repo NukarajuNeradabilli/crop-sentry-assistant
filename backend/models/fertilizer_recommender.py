@@ -16,7 +16,7 @@ class FertilizerRecommender:
         # Initialize the Gemini AI model
         self.chat_model = ChatGoogleGenerativeAI(
             model="gemini-1.5-pro",
-            google_api_key=os.environ.get("GOOGLE_API_KEY"),
+            google_api_key="AIzaSyBRmkSyw-LAU-kHaDG7tki_n2oC0VQh61M",
             temperature=0.3,
             safety_settings=self.safety_settings
         )
