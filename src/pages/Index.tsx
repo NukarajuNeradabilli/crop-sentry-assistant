@@ -5,8 +5,9 @@ import { ManualInput } from "@/components/ManualInput";
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
-import { Cloud, ChartBar, Sprout } from "lucide-react";
+import { Cloud, ChartBar, Sprout, Image, Settings, BarChart2 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
+import { FertilizerRecommendation } from "@/components/FertilizerRecommendation";
 
 interface AnalysisResult {
   pestName?: string;
@@ -88,9 +89,19 @@ const Index = () => {
         </div>
 
         <Tabs defaultValue="image" className="w-full">
-          <TabsList className="grid w-full max-w-2xl mx-auto grid-cols-2 bg-white/50">
-            <TabsTrigger value="image">Image Upload</TabsTrigger>
-            <TabsTrigger value="manual">Manual Input</TabsTrigger>
+          <TabsList className="grid w-full max-w-3xl mx-auto grid-cols-3 bg-white/50">
+            <TabsTrigger value="image" className="flex items-center gap-2">
+              <Image className="w-4 h-4" />
+              Image Upload
+            </TabsTrigger>
+            <TabsTrigger value="fertilizer" className="flex items-center gap-2">
+              <Settings className="w-4 h-4" />
+              Fertilizer Recommendation
+            </TabsTrigger>
+            <TabsTrigger value="yield" className="flex items-center gap-2">
+              <BarChart2 className="w-4 h-4" />
+              Yield Prediction
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="image" className="mt-6">
@@ -104,15 +115,6 @@ const Index = () => {
                       <p className="text-sm text-gray-600">Detected Pest</p>
                       <p className="font-medium">{result.pestName}</p>
                     </div>
-                    {/* {<div>
-                      <p className="text-sm text-gray-600">Confidence</p>
-                      <Progress value={result.confidence ? result.confidence * 100 : 0} className="h-2" />
-                      <p className="text-sm mt-1">{result.confidence ? `${(result.confidence * 100).toFixed(1)}%` : '0%'}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-600">Severity</p>
-                      <p className="font-medium capitalize">{result.severity}</p>
-                    </div>} */}
                     {result.recommendations?.pesticides.length > 0 && (
                       <div>
                         <p className="text-sm text-gray-600 mb-2">Recommended Pesticides</p>
@@ -132,8 +134,20 @@ const Index = () => {
             </div>
           </TabsContent>
 
-          <TabsContent value="manual" className="mt-6">
-            <ManualInput onSubmit={handleManualSubmit} isLoading={loading} />
+          <TabsContent value="fertilizer" className="mt-6">
+            <div className="max-w-4xl mx-auto">
+              <div className="bg-white/80 p-6 rounded-lg shadow-sm">
+                <FertilizerRecommendation />
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="yield" className="mt-6">
+            <div className="max-w-4xl mx-auto">
+              <div className="bg-white/80 p-6 rounded-lg shadow-sm">
+                <ManualInput onSubmit={handleManualSubmit} isLoading={loading} />
+              </div>
+            </div>
           </TabsContent>
         </Tabs>
 
