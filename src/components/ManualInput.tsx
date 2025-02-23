@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -13,6 +12,7 @@ import {
 import { Card, CardContent } from "./ui/card";
 import { ChartBar, Cloud } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { FertilizerRecommendation } from "./FertilizerRecommendation";
 
 interface ManualInputProps {
   onSubmit: (data: any) => void;
@@ -75,144 +75,151 @@ export const ManualInput = ({ onSubmit, isLoading }: ManualInputProps) => {
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="grid gap-6 md:grid-cols-2">
-          <div className="space-y-2">
-            <Label htmlFor="crop_type">Crop Type</Label>
-            <Select
-              onValueChange={(value) => handleChange("crop_type", value)}
-              required
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select crop type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="rice">Rice</SelectItem>
-                <SelectItem value="wheat">Wheat</SelectItem>
-                <SelectItem value="corn">Corn</SelectItem>
-                <SelectItem value="cotton">Cotton</SelectItem>
-                <SelectItem value="sugarcane">Sugarcane</SelectItem>
-              </SelectContent>
-            </Select>
+      <div className="bg-white/80 p-6 rounded-lg shadow-sm">
+        <FertilizerRecommendation />
+      </div>
+
+      <div className="bg-white/80 p-6 rounded-lg shadow-sm">
+        <h3 className="text-lg font-semibold mb-6">Crop Yield Prediction</h3>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="grid gap-6 md:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="crop_type">Crop Type</Label>
+              <Select
+                onValueChange={(value) => handleChange("crop_type", value)}
+                required
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select crop type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="rice">Rice</SelectItem>
+                  <SelectItem value="wheat">Wheat</SelectItem>
+                  <SelectItem value="corn">Corn</SelectItem>
+                  <SelectItem value="cotton">Cotton</SelectItem>
+                  <SelectItem value="sugarcane">Sugarcane</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="soil_type">Soil Type</Label>
+              <Select onValueChange={(value) => handleChange("soil_type", value)} required>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select soil type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="clay">Clay</SelectItem>
+                  <SelectItem value="sandy">Sandy</SelectItem>
+                  <SelectItem value="loamy">Loamy</SelectItem>
+                  <SelectItem value="silt">Silt</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="area">Area (hectares)</Label>
+              <Input
+                id="area"
+                type="number"
+                placeholder="Enter area"
+                value={formData.area}
+                onChange={(e) => handleChange("area", parseFloat(e.target.value))}
+                required
+                min="0"
+                step="0.1"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="rainfall">Annual Rainfall (mm)</Label>
+              <Input
+                id="rainfall"
+                type="number"
+                placeholder="Enter rainfall"
+                value={formData.rainfall}
+                onChange={(e) => handleChange("rainfall", parseFloat(e.target.value))}
+                required
+                min="0"
+                step="0.1"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="fertilizer">Fertilizer (kg/hectare)</Label>
+              <Input
+                id="fertilizer"
+                type="number"
+                placeholder="Enter fertilizer amount"
+                value={formData.fertilizer}
+                onChange={(e) => handleChange("fertilizer", parseFloat(e.target.value))}
+                required
+                min="0"
+                step="0.1"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="pesticide">Pesticide (kg/hectare)</Label>
+              <Input
+                id="pesticide"
+                type="number"
+                placeholder="Enter pesticide amount"
+                value={formData.pesticide}
+                onChange={(e) => handleChange("pesticide", parseFloat(e.target.value))}
+                required
+                min="0"
+                step="0.1"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="temperature">Temperature (°C)</Label>
+              <Input
+                id="temperature"
+                type="number"
+                placeholder="Enter temperature"
+                value={formData.temperature}
+                onChange={(e) => handleChange("temperature", parseFloat(e.target.value))}
+                required
+                min="-50"
+                max="60"
+                step="0.1"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="humidity">Humidity (%)</Label>
+              <Input
+                id="humidity"
+                type="number"
+                placeholder="Enter humidity"
+                value={formData.humidity}
+                onChange={(e) => handleChange("humidity", parseFloat(e.target.value))}
+                required
+                min="0"
+                max="100"
+                step="1"
+              />
+            </div>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="soil_type">Soil Type</Label>
-            <Select onValueChange={(value) => handleChange("soil_type", value)} required>
-              <SelectTrigger>
-                <SelectValue placeholder="Select soil type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="clay">Clay</SelectItem>
-                <SelectItem value="sandy">Sandy</SelectItem>
-                <SelectItem value="loamy">Loamy</SelectItem>
-                <SelectItem value="silt">Silt</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            {isLoading ? "Analyzing..." : "Predict Yield"}
+          </Button>
+        </form>
 
-          <div className="space-y-2">
-            <Label htmlFor="area">Area (hectares)</Label>
-            <Input
-              id="area"
-              type="number"
-              placeholder="Enter area"
-              value={formData.area}
-              onChange={(e) => handleChange("area", parseFloat(e.target.value))}
-              required
-              min="0"
-              step="0.1"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="rainfall">Annual Rainfall (mm)</Label>
-            <Input
-              id="rainfall"
-              type="number"
-              placeholder="Enter rainfall"
-              value={formData.rainfall}
-              onChange={(e) => handleChange("rainfall", parseFloat(e.target.value))}
-              required
-              min="0"
-              step="0.1"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="fertilizer">Fertilizer (kg/hectare)</Label>
-            <Input
-              id="fertilizer"
-              type="number"
-              placeholder="Enter fertilizer amount"
-              value={formData.fertilizer}
-              onChange={(e) => handleChange("fertilizer", parseFloat(e.target.value))}
-              required
-              min="0"
-              step="0.1"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="pesticide">Pesticide (kg/hectare)</Label>
-            <Input
-              id="pesticide"
-              type="number"
-              placeholder="Enter pesticide amount"
-              value={formData.pesticide}
-              onChange={(e) => handleChange("pesticide", parseFloat(e.target.value))}
-              required
-              min="0"
-              step="0.1"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="temperature">Temperature (°C)</Label>
-            <Input
-              id="temperature"
-              type="number"
-              placeholder="Enter temperature"
-              value={formData.temperature}
-              onChange={(e) => handleChange("temperature", parseFloat(e.target.value))}
-              required
-              min="-50"
-              max="60"
-              step="0.1"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="humidity">Humidity (%)</Label>
-            <Input
-              id="humidity"
-              type="number"
-              placeholder="Enter humidity"
-              value={formData.humidity}
-              onChange={(e) => handleChange("humidity", parseFloat(e.target.value))}
-              required
-              min="0"
-              max="100"
-              step="1"
-            />
-          </div>
-        </div>
-
-        <Button type="submit" className="w-full" disabled={isLoading}>
-          {isLoading ? "Analyzing..." : "Predict Yield"}
-        </Button>
-      </form>
-
-      {prediction && (
-        <Card className="bg-green-50">
-          <CardContent className="p-6">
-            <h3 className="text-xl font-semibold mb-2">Prediction Results</h3>
-            <p className="text-lg">
-              Expected Yield: <span className="font-bold">{prediction.prediction.toFixed(2)}</span> {prediction.unit}
-            </p>
-          </CardContent>
-        </Card>
-      )}
+        {prediction && (
+          <Card className="bg-green-50 mt-6">
+            <CardContent className="p-6">
+              <h3 className="text-xl font-semibold mb-2">Prediction Results</h3>
+              <p className="text-lg">
+                Expected Yield: <span className="font-bold">{prediction.prediction.toFixed(2)}</span> {prediction.unit}
+              </p>
+            </CardContent>
+          </Card>
+        )}
+      </div>
 
       <div className="grid gap-6 md:grid-cols-2">
         <Card className="hover:shadow-lg transition-shadow duration-300">
