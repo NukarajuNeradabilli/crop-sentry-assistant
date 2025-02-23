@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -12,7 +13,6 @@ import {
 import { Card, CardContent } from "./ui/card";
 import { ChartBar, Cloud } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { FertilizerRecommendation } from "./FertilizerRecommendation";
 
 interface ManualInputProps {
   onSubmit: (data: any) => void;
@@ -29,7 +29,7 @@ export const ManualInput = ({ onSubmit, isLoading }: ManualInputProps) => {
   const [prediction, setPrediction] = useState<YieldPrediction | null>(null);
   const [formData, setFormData] = useState({
     Crop: "",
-    Crop_Year: new Date().getFullYear(), // Default to current year
+    Crop_Year: new Date().getFullYear(),
     Season: "",
     State: "",
     Area: 0,
@@ -38,70 +38,26 @@ export const ManualInput = ({ onSubmit, isLoading }: ManualInputProps) => {
     Pesticide: 0,
   });
 
-  // Valid crop options (ensure these exactly match the training categories)
   const cropOptions = [
-    "Arecanut",
-    "Arhar/Tur",
-    "Bajra",
-    "Banana",
-    "Barley",
-    "Black pepper",
-    "Cardamom",
-    "Cashewnut",
-    "Castor seed",
-    "Coriander",
-    "Cotton(lint)",
-    "Cowpea(Lobia)",
-    "Dry chillies",
-    "Garlic",
-    "Ginger",
-    "Gram",
-    "Groundnut",
-    "Guar seed",
-    "Horse-gram",
-    "Jowar",
-    "Jute",
-    "Khesari",
-    "Linseed",
-    "Maize",
-    "Masoor",
-    "Mesta",
-    "Moong(Green Gram)",
-    "Moth",
-    "Niger seed",
-    "Oilseeds total",
-    "Onion",
-    "Other Rabi pulses",
-    "Other Cereals",
-    "Other Kharif pulses",
-    "Other Summer Pulses",
-    "Peas & beans (Pulses)",
-    "Potato",
-    "Ragi",
-    "Rapeseed &Mustard",
-    "Rice",
-    "Safflower",
-    "Sannhamp",
-    "Sesamum",
-    "Small millets",
-    "Soyabean",
-    "Sugarcane",
-    "Sunflower",
-    "Sweet potato",
-    "Tapioca",
-    "Tobacco",
-    "Turmeric",
-    "Urad",
-    "Wheat",
-    "other oilseeds"
+    "Arecanut", "Arhar/Tur", "Bajra", "Banana", "Barley", "Black pepper", 
+    "Cardamom", "Cashewnut", "Castor seed", "Coriander", "Cotton(lint)", 
+    "Cowpea(Lobia)", "Dry chillies", "Garlic", "Ginger", "Gram", "Groundnut", 
+    "Guar seed", "Horse-gram", "Jowar", "Jute", "Khesari", "Linseed", "Maize", 
+    "Masoor", "Mesta", "Moong(Green Gram)", "Moth", "Niger seed", "Oilseeds total", 
+    "Onion", "Other Rabi pulses", "Other Cereals", "Other Kharif pulses", 
+    "Other Summer Pulses", "Peas & beans (Pulses)", "Potato", "Ragi", 
+    "Rapeseed &Mustard", "Rice", "Safflower", "Sannhamp", "Sesamum", 
+    "Small millets", "Soyabean", "Sugarcane", "Sunflower", "Sweet potato", 
+    "Tapioca", "Tobacco", "Turmeric", "Urad", "Wheat", "other oilseeds"
   ];
 
   const stateOptions = [
-    "Assam", "Karnataka", "Kerala", "Meghalaya", "West Bengal", "Puducherry", "Goa",
-    "Andhra Pradesh", "Tamil Nadu", "Odisha", "Bihar", "Gujarat", "Madhya Pradesh",
-    "Maharashtra", "Mizoram", "Punjab", "Uttar Pradesh", "Haryana", "Himachal Pradesh",
-    "Tripura", "Nagaland", "Chhattisgarh", "Uttarakhand", "Jharkhand", "Delhi",
-    "Manipur", "Jammu and Kashmir", "Telangana", "Arunachal Pradesh", "Sikkim"
+    "Assam", "Karnataka", "Kerala", "Meghalaya", "West Bengal", "Puducherry", 
+    "Goa", "Andhra Pradesh", "Tamil Nadu", "Odisha", "Bihar", "Gujarat", 
+    "Madhya Pradesh", "Maharashtra", "Mizoram", "Punjab", "Uttar Pradesh", 
+    "Haryana", "Himachal Pradesh", "Tripura", "Nagaland", "Chhattisgarh", 
+    "Uttarakhand", "Jharkhand", "Delhi", "Manipur", "Jammu and Kashmir", 
+    "Telangana", "Arunachal Pradesh", "Sikkim"
   ];
 
   const seasonOptions = ["Whole Year", "Kharif", "Rabi", "Autumn", "Summer", "Winter"];
@@ -140,153 +96,148 @@ export const ManualInput = ({ onSubmit, isLoading }: ManualInputProps) => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
-      <div className="bg-white/80 p-6 rounded-lg shadow-sm">
-        <FertilizerRecommendation />
-      </div>
-
-      <div className="bg-white/80 p-6 rounded-lg shadow-sm">
-        <h3 className="text-lg font-semibold mb-6">Crop Yield Prediction</h3>
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid gap-6 md:grid-cols-2">
-            {/* Crop Type */}
-            <div className="space-y-2">
-              <Label htmlFor="Crop">Crop Type</Label>
-              <Select onValueChange={(value) => handleChange("Crop", value)} required>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select crop type" />
-                </SelectTrigger>
-                <SelectContent>
-                  {cropOptions.map((crop) => (
-                    <SelectItem key={crop} value={crop}>{crop}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Crop Year */}
-            <div className="space-y-2">
-              <Label htmlFor="Crop_Year">Crop Year</Label>
-              <Input
-                id="Crop_Year"
-                type="number"
-                value={formData.Crop_Year}
-                onChange={(e) => handleChange("Crop_Year", parseInt(e.target.value))}
-                required
-                min="1980"
-                max={new Date().getFullYear()}
-                step="1"
-              />
-            </div>
-
-            {/* Season */}
-            <div className="space-y-2">
-              <Label htmlFor="Season">Season</Label>
-              <Select onValueChange={(value) => handleChange("Season", value)} required>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select season" />
-                </SelectTrigger>
-                <SelectContent>
-                  {seasonOptions.map((season) => (
-                    <SelectItem key={season} value={season}>{season}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* State */}
-            <div className="space-y-2">
-              <Label htmlFor="State">State</Label>
-              <Select onValueChange={(value) => handleChange("State", value)} required>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select state" />
-                </SelectTrigger>
-                <SelectContent>
-                  {stateOptions.map((state) => (
-                    <SelectItem key={state} value={state}>{state}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Area */}
-            <div className="space-y-2">
-              <Label htmlFor="Area">Area (hectares)</Label>
-              <Input
-                id="Area"
-                type="number"
-                placeholder="Enter area"
-                value={formData.Area}
-                onChange={(e) => handleChange("Area", parseFloat(e.target.value))}
-                required
-                min="0"
-                step="0.1"
-              />
-            </div>
-
-            {/* Annual Rainfall */}
-            <div className="space-y-2">
-              <Label htmlFor="Annual_Rainfall">Annual Rainfall (mm)</Label>
-              <Input
-                id="Annual_Rainfall"
-                type="number"
-                placeholder="Enter rainfall"
-                value={formData.Annual_Rainfall}
-                onChange={(e) => handleChange("Annual_Rainfall", parseFloat(e.target.value))}
-                required
-                min="0"
-                step="0.1"
-              />
-            </div>
-
-            {/* Fertilizer */}
-            <div className="space-y-2">
-              <Label htmlFor="Fertilizer">Fertilizer (kg/hectare)</Label>
-              <Input
-                id="Fertilizer"
-                type="number"
-                placeholder="Enter fertilizer amount"
-                value={formData.Fertilizer}
-                onChange={(e) => handleChange("Fertilizer", parseFloat(e.target.value))}
-                required
-                min="0"
-                step="0.1"
-              />
-            </div>
-
-            {/* Pesticide */}
-            <div className="space-y-2">
-              <Label htmlFor="Pesticide">Pesticide (kg/hectare)</Label>
-              <Input
-                id="Pesticide"
-                type="number"
-                placeholder="Enter pesticide amount"
-                value={formData.Pesticide}
-                onChange={(e) => handleChange("Pesticide", parseFloat(e.target.value))}
-                required
-                min="0"
-                step="0.1"
-              />
-            </div>
+    <div className="space-y-6">
+      <h3 className="text-lg font-semibold">Crop Yield Prediction</h3>
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="grid gap-6 md:grid-cols-2">
+          {/* Crop Type */}
+          <div className="space-y-2">
+            <Label htmlFor="Crop">Crop Type</Label>
+            <Select onValueChange={(value) => handleChange("Crop", value)} required>
+              <SelectTrigger>
+                <SelectValue placeholder="Select crop type" />
+              </SelectTrigger>
+              <SelectContent>
+                {cropOptions.map((crop) => (
+                  <SelectItem key={crop} value={crop}>{crop}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
-          <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? "Analyzing..." : "Predict Yield"}
-          </Button>
-        </form>
 
-        {prediction && (
-          <Card className="bg-green-50 mt-6">
-            <CardContent className="p-6">
-              <h3 className="text-xl font-semibold mb-2">Prediction Results</h3>
-              <p className="text-lg">
-                Expected Yield:{" "}
-                <span className="font-bold">{prediction.prediction.toFixed(2)}</span>{" "}
-                {prediction.unit}
-              </p>
-            </CardContent>
-          </Card>
-        )}
-      </div>
+          {/* Crop Year */}
+          <div className="space-y-2">
+            <Label htmlFor="Crop_Year">Crop Year</Label>
+            <Input
+              id="Crop_Year"
+              type="number"
+              value={formData.Crop_Year}
+              onChange={(e) => handleChange("Crop_Year", parseInt(e.target.value))}
+              required
+              min="1980"
+              max={new Date().getFullYear()}
+              step="1"
+            />
+          </div>
+
+          {/* Season */}
+          <div className="space-y-2">
+            <Label htmlFor="Season">Season</Label>
+            <Select onValueChange={(value) => handleChange("Season", value)} required>
+              <SelectTrigger>
+                <SelectValue placeholder="Select season" />
+              </SelectTrigger>
+              <SelectContent>
+                {seasonOptions.map((season) => (
+                  <SelectItem key={season} value={season}>{season}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* State */}
+          <div className="space-y-2">
+            <Label htmlFor="State">State</Label>
+            <Select onValueChange={(value) => handleChange("State", value)} required>
+              <SelectTrigger>
+                <SelectValue placeholder="Select state" />
+              </SelectTrigger>
+              <SelectContent>
+                {stateOptions.map((state) => (
+                  <SelectItem key={state} value={state}>{state}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Area */}
+          <div className="space-y-2">
+            <Label htmlFor="Area">Area (hectares)</Label>
+            <Input
+              id="Area"
+              type="number"
+              placeholder="Enter area"
+              value={formData.Area}
+              onChange={(e) => handleChange("Area", parseFloat(e.target.value))}
+              required
+              min="0"
+              step="0.1"
+            />
+          </div>
+
+          {/* Annual Rainfall */}
+          <div className="space-y-2">
+            <Label htmlFor="Annual_Rainfall">Annual Rainfall (mm)</Label>
+            <Input
+              id="Annual_Rainfall"
+              type="number"
+              placeholder="Enter rainfall"
+              value={formData.Annual_Rainfall}
+              onChange={(e) => handleChange("Annual_Rainfall", parseFloat(e.target.value))}
+              required
+              min="0"
+              step="0.1"
+            />
+          </div>
+
+          {/* Fertilizer */}
+          <div className="space-y-2">
+            <Label htmlFor="Fertilizer">Fertilizer (kg/hectare)</Label>
+            <Input
+              id="Fertilizer"
+              type="number"
+              placeholder="Enter fertilizer amount"
+              value={formData.Fertilizer}
+              onChange={(e) => handleChange("Fertilizer", parseFloat(e.target.value))}
+              required
+              min="0"
+              step="0.1"
+            />
+          </div>
+
+          {/* Pesticide */}
+          <div className="space-y-2">
+            <Label htmlFor="Pesticide">Pesticide (kg/hectare)</Label>
+            <Input
+              id="Pesticide"
+              type="number"
+              placeholder="Enter pesticide amount"
+              value={formData.Pesticide}
+              onChange={(e) => handleChange("Pesticide", parseFloat(e.target.value))}
+              required
+              min="0"
+              step="0.1"
+            />
+          </div>
+        </div>
+
+        <Button type="submit" className="w-full" disabled={isLoading}>
+          {isLoading ? "Analyzing..." : "Predict Yield"}
+        </Button>
+      </form>
+
+      {prediction && (
+        <Card className="bg-green-50">
+          <CardContent className="p-6">
+            <h3 className="text-xl font-semibold mb-2">Prediction Results</h3>
+            <p className="text-lg">
+              Expected Yield:{" "}
+              <span className="font-bold">{prediction.prediction.toFixed(2)}</span>{" "}
+              {prediction.unit}
+            </p>
+          </CardContent>
+        </Card>
+      )}
 
       <div className="grid gap-6 md:grid-cols-2">
         <Card className="hover:shadow-lg transition-shadow duration-300">
