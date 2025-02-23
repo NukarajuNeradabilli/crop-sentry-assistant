@@ -83,3 +83,4 @@ class YieldPredictor:
         except Exception as e:
             print(f"Prediction error: {str(e)}")
             raise
+
