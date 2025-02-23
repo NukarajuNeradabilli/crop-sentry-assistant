@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -28,15 +27,33 @@ export const ManualInput = ({ onSubmit, isLoading }: ManualInputProps) => {
   const { toast } = useToast();
   const [prediction, setPrediction] = useState<YieldPrediction | null>(null);
   const [formData, setFormData] = useState({
-    crop_type: "",
-    soil_type: "",
-    area: 0,
-    rainfall: 0,
-    fertilizer: 0,
-    pesticide: 0,
-    temperature: 0,
-    humidity: 0,
+    Crop: "",
+    Crop_Year: new Date().getFullYear(), // Default to current year
+    Season: "",
+    State: "",
+    Area: 0,
+    Annual_Rainfall: 0,
+    Fertilizer: 0,
+    Pesticide: 0,
   });
+
+  const cropOptions = [
+    "Arecanut", "Arhar/Tur", "Bajra", "Banana", "Barley", "Black pepper",
+    "Cardamom", "Cashewnut", "Castor seed", "Coconut ", "Coriander",
+    "Cotton(lint)", "Cowpea(Lobia)", "Dry chillies", "Garlic", "Ginger", "Gram",
+    "Groundnut", "Guar seed", "Horse-gram", "Jowar", "Jute", "Khesari", "Linseed",
+    "Maize", "Masoor", "Mesta", "Moong(Green Gram)", "Moth", "Niger seed",
+    "Oilseeds total", "Onion", "Other  Rabi pulses", "Other Cereals",
+    "Other Kharif pulses", "Other Summer Pulses", "Peas & beans (Pulses)",
+    "Potato", "Ragi", "Rapeseed &Mustard", "Rice", "Safflower", "Sannhamp",
+    "Sesamum", "Small millets", "Soyabean", "Sugarcane", "Sunflower",
+    "Sweet potato", "Tapioca", "Tobacco", "Turmeric", "Urad", "Wheat",
+    "other oilseeds"
+  ];
+
+  const stateOptions = ['Assam', 'Karnataka', 'Kerala', 'Meghalaya', 'West Bengal', 'Puducherry', 'Goa', 'Andhra Pradesh', 'Tamil Nadu', 'Odisha', 'Bihar', 'Gujarat', 'Madhya Pradesh', 'Maharashtra', 'Mizoram', 'Punjab', 'Uttar Pradesh', 'Haryana', 'Himachal Pradesh', 'Tripura', 'Nagaland', 'Chhattisgarh', 'Uttarakhand', 'Jharkhand', 'Delhi', 'Manipur', 'Jammu and Kashmir', 'Telangana', 'Arunachal Pradesh', 'Sikkim'];
+
+  const seasonOptions = ['Whole Year', 'Kharif', 'Rabi', 'Autumn', 'Summer', 'Winter'];
 
   const handleChange = (field: string, value: string | number) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -78,47 +95,69 @@ export const ManualInput = ({ onSubmit, isLoading }: ManualInputProps) => {
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid gap-6 md:grid-cols-2">
           <div className="space-y-2">
-            <Label htmlFor="crop_type">Crop Type</Label>
-            <Select
-              onValueChange={(value) => handleChange("crop_type", value)}
-              required
-            >
+            <Label htmlFor="Crop">Crop Type</Label>
+            <Select onValueChange={(value) => handleChange("Crop", value)} required>
               <SelectTrigger>
                 <SelectValue placeholder="Select crop type" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="rice">Rice</SelectItem>
-                <SelectItem value="wheat">Wheat</SelectItem>
-                <SelectItem value="corn">Corn</SelectItem>
-                <SelectItem value="cotton">Cotton</SelectItem>
-                <SelectItem value="sugarcane">Sugarcane</SelectItem>
+                {cropOptions.map((crop) => (
+                  <SelectItem key={crop} value={crop}>{crop}</SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="soil_type">Soil Type</Label>
-            <Select onValueChange={(value) => handleChange("soil_type", value)} required>
+            <Label htmlFor="Crop_Year">Crop Year</Label>
+            <Input
+              id="Crop_Year"
+              type="number"
+              value={formData.Crop_Year}
+              onChange={(e) => handleChange("Crop_Year", parseInt(e.target.value))}
+              required
+              min="1980"
+              max={new Date().getFullYear()}
+              step="1"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="Season">Season</Label>
+            <Select onValueChange={(value) => handleChange("Season", value)} required>
               <SelectTrigger>
-                <SelectValue placeholder="Select soil type" />
+                <SelectValue placeholder="Select season" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="clay">Clay</SelectItem>
-                <SelectItem value="sandy">Sandy</SelectItem>
-                <SelectItem value="loamy">Loamy</SelectItem>
-                <SelectItem value="silt">Silt</SelectItem>
+                {seasonOptions.map((season) => (
+                  <SelectItem key={season} value={season}>{season}</SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="area">Area (hectares)</Label>
+            <Label htmlFor="State">State</Label>
+            <Select onValueChange={(value) => handleChange("State", value)} required>
+              <SelectTrigger>
+                <SelectValue placeholder="Select state" />
+              </SelectTrigger>
+              <SelectContent>
+                {stateOptions.map((state) => (
+                  <SelectItem key={state} value={state}>{state}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="Area">Area (hectares)</Label>
             <Input
-              id="area"
+              id="Area"
               type="number"
               placeholder="Enter area"
-              value={formData.area}
-              onChange={(e) => handleChange("area", parseFloat(e.target.value))}
+              value={formData.Area}
+              onChange={(e) => handleChange("Area", parseFloat(e.target.value))}
               required
               min="0"
               step="0.1"
@@ -126,13 +165,13 @@ export const ManualInput = ({ onSubmit, isLoading }: ManualInputProps) => {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="rainfall">Annual Rainfall (mm)</Label>
+            <Label htmlFor="Annual_Rainfall">Annual Rainfall (mm)</Label>
             <Input
-              id="rainfall"
+              id="Annual_Rainfall"
               type="number"
               placeholder="Enter rainfall"
-              value={formData.rainfall}
-              onChange={(e) => handleChange("rainfall", parseFloat(e.target.value))}
+              value={formData.Annual_Rainfall}
+              onChange={(e) => handleChange("Annual_Rainfall", parseFloat(e.target.value))}
               required
               min="0"
               step="0.1"
@@ -140,13 +179,13 @@ export const ManualInput = ({ onSubmit, isLoading }: ManualInputProps) => {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="fertilizer">Fertilizer (kg/hectare)</Label>
+            <Label htmlFor="Fertilizer">Fertilizer (kg/hectare)</Label>
             <Input
-              id="fertilizer"
+              id="Fertilizer"
               type="number"
               placeholder="Enter fertilizer amount"
-              value={formData.fertilizer}
-              onChange={(e) => handleChange("fertilizer", parseFloat(e.target.value))}
+              value={formData.Fertilizer}
+              onChange={(e) => handleChange("Fertilizer", parseFloat(e.target.value))}
               required
               min="0"
               step="0.1"
@@ -154,46 +193,16 @@ export const ManualInput = ({ onSubmit, isLoading }: ManualInputProps) => {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="pesticide">Pesticide (kg/hectare)</Label>
+            <Label htmlFor="Pesticide">Pesticide (kg/hectare)</Label>
             <Input
-              id="pesticide"
+              id="Pesticide"
               type="number"
               placeholder="Enter pesticide amount"
-              value={formData.pesticide}
-              onChange={(e) => handleChange("pesticide", parseFloat(e.target.value))}
+              value={formData.Pesticide}
+              onChange={(e) => handleChange("Pesticide", parseFloat(e.target.value))}
               required
               min="0"
               step="0.1"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="temperature">Temperature (°C)</Label>
-            <Input
-              id="temperature"
-              type="number"
-              placeholder="Enter temperature"
-              value={formData.temperature}
-              onChange={(e) => handleChange("temperature", parseFloat(e.target.value))}
-              required
-              min="-50"
-              max="60"
-              step="0.1"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="humidity">Humidity (%)</Label>
-            <Input
-              id="humidity"
-              type="number"
-              placeholder="Enter humidity"
-              value={formData.humidity}
-              onChange={(e) => handleChange("humidity", parseFloat(e.target.value))}
-              required
-              min="0"
-              max="100"
-              step="1"
             />
           </div>
         </div>

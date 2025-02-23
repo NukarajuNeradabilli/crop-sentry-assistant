@@ -104,7 +104,7 @@ const Index = () => {
                       <p className="text-sm text-gray-600">Detected Pest</p>
                       <p className="font-medium">{result.pestName}</p>
                     </div>
-                    <div>
+                    {/* {<div>
                       <p className="text-sm text-gray-600">Confidence</p>
                       <Progress value={result.confidence ? result.confidence * 100 : 0} className="h-2" />
                       <p className="text-sm mt-1">{result.confidence ? `${(result.confidence * 100).toFixed(1)}%` : '0%'}</p>
@@ -112,7 +112,7 @@ const Index = () => {
                     <div>
                       <p className="text-sm text-gray-600">Severity</p>
                       <p className="font-medium capitalize">{result.severity}</p>
-                    </div>
+                    </div>} */}
                     {result.recommendations?.pesticides.length > 0 && (
                       <div>
                         <p className="text-sm text-gray-600 mb-2">Recommended Pesticides</p>
