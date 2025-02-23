@@ -32,38 +32,79 @@ export const ManualInput = ({ onSubmit, isLoading }: ManualInputProps) => {
     Crop_Year: new Date().getFullYear(), // Default to current year
     Season: "",
     State: "",
-    Soil_Type: "",
     Area: 0,
     Annual_Rainfall: 0,
     Fertilizer: 0,
     Pesticide: 0,
-    Temperature: 0,
-    Humidity: 0,
   });
 
+  // Valid crop options (ensure these exactly match the training categories)
   const cropOptions = [
-    "Arecanut", "Arhar/Tur", "Bajra", "Banana", "Barley", "Black pepper",
-    "Cardamom", "Cashewnut", "Castor seed", "Coconut", "Coriander",
-    "Cotton(lint)", "Cowpea(Lobia)", "Dry chillies", "Garlic", "Ginger", "Gram",
-    "Groundnut", "Guar seed", "Horse-gram", "Jowar", "Jute", "Khesari", "Linseed",
-    "Maize", "Masoor", "Mesta", "Moong(Green Gram)", "Moth", "Niger seed",
-    "Oilseeds total", "Onion", "Other Rabi pulses", "Other Cereals",
-    "Other Kharif pulses", "Other Summer Pulses", "Peas & beans (Pulses)",
-    "Potato", "Ragi", "Rapeseed &Mustard", "Rice", "Safflower", "Sannhamp",
-    "Sesamum", "Small millets", "Soyabean", "Sugarcane", "Sunflower",
-    "Sweet potato", "Tapioca", "Tobacco", "Turmeric", "Urad", "Wheat",
+    "Arecanut",
+    "Arhar/Tur",
+    "Bajra",
+    "Banana",
+    "Barley",
+    "Black pepper",
+    "Cardamom",
+    "Cashewnut",
+    "Castor seed",
+    "Coriander",
+    "Cotton(lint)",
+    "Cowpea(Lobia)",
+    "Dry chillies",
+    "Garlic",
+    "Ginger",
+    "Gram",
+    "Groundnut",
+    "Guar seed",
+    "Horse-gram",
+    "Jowar",
+    "Jute",
+    "Khesari",
+    "Linseed",
+    "Maize",
+    "Masoor",
+    "Mesta",
+    "Moong(Green Gram)",
+    "Moth",
+    "Niger seed",
+    "Oilseeds total",
+    "Onion",
+    "Other Rabi pulses",
+    "Other Cereals",
+    "Other Kharif pulses",
+    "Other Summer Pulses",
+    "Peas & beans (Pulses)",
+    "Potato",
+    "Ragi",
+    "Rapeseed &Mustard",
+    "Rice",
+    "Safflower",
+    "Sannhamp",
+    "Sesamum",
+    "Small millets",
+    "Soyabean",
+    "Sugarcane",
+    "Sunflower",
+    "Sweet potato",
+    "Tapioca",
+    "Tobacco",
+    "Turmeric",
+    "Urad",
+    "Wheat",
     "other oilseeds"
   ];
 
   const stateOptions = [
-    'Assam', 'Karnataka', 'Kerala', 'Meghalaya', 'West Bengal', 'Puducherry', 'Goa', 
-    'Andhra Pradesh', 'Tamil Nadu', 'Odisha', 'Bihar', 'Gujarat', 'Madhya Pradesh', 
-    'Maharashtra', 'Mizoram', 'Punjab', 'Uttar Pradesh', 'Haryana', 'Himachal Pradesh', 
-    'Tripura', 'Nagaland', 'Chhattisgarh', 'Uttarakhand', 'Jharkhand', 'Delhi', 
-    'Manipur', 'Jammu and Kashmir', 'Telangana', 'Arunachal Pradesh', 'Sikkim'
+    "Assam", "Karnataka", "Kerala", "Meghalaya", "West Bengal", "Puducherry", "Goa",
+    "Andhra Pradesh", "Tamil Nadu", "Odisha", "Bihar", "Gujarat", "Madhya Pradesh",
+    "Maharashtra", "Mizoram", "Punjab", "Uttar Pradesh", "Haryana", "Himachal Pradesh",
+    "Tripura", "Nagaland", "Chhattisgarh", "Uttarakhand", "Jharkhand", "Delhi",
+    "Manipur", "Jammu and Kashmir", "Telangana", "Arunachal Pradesh", "Sikkim"
   ];
 
-  const seasonOptions = ['Whole Year', 'Kharif', 'Rabi', 'Autumn', 'Summer', 'Winter'];
+  const seasonOptions = ["Whole Year", "Kharif", "Rabi", "Autumn", "Summer", "Winter"];
 
   const handleChange = (field: string, value: string | number) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -73,15 +114,13 @@ export const ManualInput = ({ onSubmit, isLoading }: ManualInputProps) => {
     e.preventDefault();
     try {
       const response = await fetch('http://localhost:5000/api/predict-yield', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to predict yield');
+        throw new Error("Failed to predict yield");
       }
 
       const data = await response.json();
@@ -151,22 +190,6 @@ export const ManualInput = ({ onSubmit, isLoading }: ManualInputProps) => {
                   {seasonOptions.map((season) => (
                     <SelectItem key={season} value={season}>{season}</SelectItem>
                   ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Soil Type */}
-            <div className="space-y-2">
-              <Label htmlFor="Soil_Type">Soil Type</Label>
-              <Select onValueChange={(value) => handleChange("Soil_Type", value)} required>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select soil type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="clay">Clay</SelectItem>
-                  <SelectItem value="sandy">Sandy</SelectItem>
-                  <SelectItem value="loamy">Loamy</SelectItem>
-                  <SelectItem value="silt">Silt</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -245,38 +268,6 @@ export const ManualInput = ({ onSubmit, isLoading }: ManualInputProps) => {
                 step="0.1"
               />
             </div>
-
-            {/* Temperature */}
-            <div className="space-y-2">
-              <Label htmlFor="Temperature">Temperature (°C)</Label>
-              <Input
-                id="Temperature"
-                type="number"
-                placeholder="Enter temperature"
-                value={formData.Temperature}
-                onChange={(e) => handleChange("Temperature", parseFloat(e.target.value))}
-                required
-                min="-50"
-                max="60"
-                step="0.1"
-              />
-            </div>
-
-            {/* Humidity */}
-            <div className="space-y-2">
-              <Label htmlFor="Humidity">Humidity (%)</Label>
-              <Input
-                id="Humidity"
-                type="number"
-                placeholder="Enter humidity"
-                value={formData.Humidity}
-                onChange={(e) => handleChange("Humidity", parseFloat(e.target.value))}
-                required
-                min="0"
-                max="100"
-                step="1"
-              />
-            </div>
           </div>
           <Button type="submit" className="w-full" disabled={isLoading}>
             {isLoading ? "Analyzing..." : "Predict Yield"}
@@ -289,7 +280,8 @@ export const ManualInput = ({ onSubmit, isLoading }: ManualInputProps) => {
               <h3 className="text-xl font-semibold mb-2">Prediction Results</h3>
               <p className="text-lg">
                 Expected Yield:{" "}
-                <span className="font-bold">{prediction.prediction.toFixed(2)}</span> {prediction.unit}
+                <span className="font-bold">{prediction.prediction.toFixed(2)}</span>{" "}
+                {prediction.unit}
               </p>
             </CardContent>
           </Card>
