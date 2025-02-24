@@ -4,6 +4,7 @@ Flask-Cors
 tensorflow
 numpy
 pandas
+matplotlib
 Pillow
 Werkzeug
 scikit-learn
