@@ -2,11 +2,24 @@
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras.preprocessing import image
+import pandas as pd
 
 class PestClassifier:
     def __init__(self, model_path):
-        self.model = tf.keras.models.load_model(model_path)
-        # Updated class labels to match new implementation
+        # Load model with custom_objects to handle DepthwiseConv2D compatibility
+        self.model = tf.keras.models.load_model(
+            model_path,
+            custom_objects={'DepthwiseConv2D': tf.keras.layers.DepthwiseConv2D}
+        )
+        
+        # Load pesticide recommendations
+        self.pesticide_df = pd.read_csv("backend/Pesticides_lowercase.csv")
+        self.pest_to_pesticide = dict(zip(
+            self.pesticide_df["Pest Name"],
+            self.pesticide_df["Most Commonly Used Pesticides"]
+        ))
+        
+        # Class labels remain the same
         self.class_labels = [
             'erythroneura apicalis', 'mole cricket', 'longlegged spider mite', 'yellow rice borer',
             'sweet potato weevil', 'aleurocanthus spiniferus', 'brown plant hopper',
@@ -53,10 +66,20 @@ class PestClassifier:
         return img_array
 
     def predict(self, img_path):
-        img_array = self.preprocess_image(img_path)
-        pest_pred = self.model.predict(img_array)
-        predicted_pest_index = np.argmax(pest_pred)
-        confidence = float(pest_pred[0][predicted_pest_index])
-        
-        predicted_pest = self.class_labels[predicted_pest_index] if predicted_pest_index < len(self.class_labels) else "Unknown Pest"
-        return predicted_pest, confidence
+        try:
+            # Preprocess the image
+            img_array = self.preprocess_image(img_path)
+            
+            # Get pest prediction
+            pest_pred = self.model.predict(img_array)
+            predicted_pest_index = np.argmax(pest_pred)
+            confidence = float(pest_pred[0][predicted_pest_index])
+            
+            # Get the predicted pest name
+            predicted_pest = self.class_labels[predicted_pest_index] if predicted_pest_index < len(self.class_labels) else "Unknown Pest"
+            
+            return predicted_pest, confidence
+            
+        except Exception as e:
+            print(f"Error during prediction: {str(e)}")
+            return "Unknown Pest", 0.0
