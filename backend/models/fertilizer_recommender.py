@@ -1,5 +1,6 @@
 
 import os
+import json
 from langchain_google_genai import ChatGoogleGenerativeAI
 from google.generativeai.types.safety_types import HarmBlockThreshold, HarmCategory
 
@@ -22,12 +23,35 @@ class FertilizerRecommender:
         )
 
     def get_recommendations(self, data):
-        # Create the composite prompt
         composite_prompt = f"""
-        You are an expert agronomist. Based on the given inputs, recommend the **top 5 fertilizers**:
+        You are an expert agronomist. Based on the given inputs, predict the most likely pest affecting the crop and recommend appropriate pesticides and fertilizers.
+        Please output your response as a JSON object in the following format:
+
+        {{
+          "predicted_pest": {{
+            "name": "<pest name>",
+            "explanation": "<brief explanation>"
+          }},
+          "pesticides": [
+            {{
+              "name": "<pesticide name>",
+              "description": "<short reason>",
+              "dosage": "Apply as per manufacturer's instructions"
+            }}
+            // up to 3 items
+          ],
+          "fertilizers": [
+            {{
+              "name": "<fertilizer name>",
+              "description": "<short reason>",
+              "dosage": "Apply as per manufacturer's instructions"
+            }}
+            // up to 3 items
+          ]
+        }}
 
         **Input Data:**
-        - **Pest Identified:** {data['pest_identified']}
+        - **Crop Name:** {data['crop_name']}
         - **Environmental Factors:** 
           - Temperature: {data['temperature']}°C
           - Humidity: {data['humidity']}%
@@ -37,18 +61,6 @@ class FertilizerRecommender:
           - Nitrogen: {data['nitrogen']}
           - Phosphorus: {data['phosphorus']}
           - Potassium: {data['potassium']}
-
-        **Task:**
-        - Provide a list of the **top 5 fertilizers** suitable for this scenario.
-        - Include **one short reason** for why each fertilizer is recommended.
-        - Format response as:
-          1️⃣ **Fertilizer Name** – Short Reason.
-          2️⃣ **Fertilizer Name** – Short Reason.
-          3️⃣ **Fertilizer Name** – Short Reason.
-          4️⃣ **Fertilizer Name** – Short Reason.
-          5️⃣ **Fertilizer Name** – Short Reason.
-
-        Please generate only the 5 bullet points in this format.
         """
 
         # Call the Gemini AI model
@@ -62,21 +74,19 @@ class FertilizerRecommender:
         else:
             recommendation = str(response)
 
-        # Process recommendations
-        fertilizers = recommendation.strip().split("\n")
-        recommendations = []
-        
-        for fert in fertilizers:
-            if "**" in fert:  # Check if it's a properly formatted recommendation
-                name_part = fert.split("–")[0].strip()
-                reason_part = fert.split("–")[1].strip() if len(fert.split("–")) > 1 else ""
-                name = name_part.replace("**", "").split(" ", 1)[1]  # Remove emoji and asterisks
-                
-                recommendations.append({
-                    "name": name,
-                    "description": reason_part,
-                    "dosage": "Apply as per manufacturer's instructions"  # Default dosage message
-                })
+        # Strip markdown formatting if present
+        recommendation = recommendation.strip()
+        if recommendation.startswith("```json"):
+            recommendation = recommendation[len("```json"):].strip()
+        if recommendation.startswith("```"):
+            recommendation = recommendation[len("```"):].strip()
+        if recommendation.endswith("```"):
+            recommendation = recommendation[:-3].strip()
 
-        return recommendations
-
+        # Attempt to parse the JSON response
+        try:
+            recommendations_json = json.loads(recommendation)
+        except Exception as e:
+            recommendations_json = {"error": "Failed to parse response", "raw": recommendation}
+        print(recommendations_json)
+        return recommendations_json
