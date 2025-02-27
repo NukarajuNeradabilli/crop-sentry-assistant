@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { ImageUpload } from "@/components/ImageUpload";
 import { ManualInput } from "@/components/ManualInput";
@@ -12,6 +13,8 @@ interface AnalysisResult {
   pestName?: string;
   confidence?: number;
   severity?: "low" | "medium" | "high";
+  "Identified Pest"?: string;
+  "Recommended Pesticide"?: string;
   recommendations?: {
     pesticides: Array<{ name: string; description: string }>;
     fertilizers: Array<{ name: string; description: string }>;
@@ -26,10 +29,11 @@ const Index = () => {
   const handleImageUpload = async (file: File) => {
     setLoading(true);
     const formData = new FormData();
-    formData.append('image', file);
+    formData.append('file', file);
 
     try {
-      const response = await fetch('http://localhost:5000/api/analyze', {
+      // Updated endpoint to use backend2 on port 5001
+      const response = await fetch('http://localhost:5001/predict', {
         method: 'POST',
         body: formData,
       });
@@ -42,7 +46,7 @@ const Index = () => {
       setResult(data);
       toast({
         title: "Analysis Complete",
-        description: `Detected: ${data.pestName}`,
+        description: `Detected: ${data["Identified Pest"]}`,
       });
     } catch (error) {
       toast({
@@ -50,6 +54,7 @@ const Index = () => {
         description: "Failed to process image. Please try again.",
         variant: "destructive",
       });
+      console.error("Error:", error);
     } finally {
       setLoading(false);
     }
@@ -112,8 +117,16 @@ const Index = () => {
                   <div className="space-y-4">
                     <div>
                       <p className="text-sm text-gray-600">Detected Pest</p>
-                      <p className="font-medium">{result.pestName}</p>
+                      <p className="font-medium">{result["Identified Pest"] || result.pestName}</p>
                     </div>
+                    {result["Recommended Pesticide"] && (
+                      <div>
+                        <p className="text-sm text-gray-600 mb-2">Recommended Pesticides</p>
+                        <div className="bg-green-50 p-3 rounded">
+                          <p className="font-medium">{result["Recommended Pesticide"]}</p>
+                        </div>
+                      </div>
+                    )}
                     {result.recommendations?.pesticides.length > 0 && (
                       <div>
                         <p className="text-sm text-gray-600 mb-2">Recommended Pesticides</p>
