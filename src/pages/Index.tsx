@@ -5,9 +5,10 @@ import { ManualInput } from "@/components/ManualInput";
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
-import { Cloud, ChartBar, Sprout, Image, Settings, BarChart2 } from "lucide-react";
+import { Cloud, ChartBar, Sprout, Image, Settings, BarChart2, CloudSun } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { FertilizerRecommendation } from "@/components/FertilizerRecommendation";
+import { Weather } from "@/components/Weather";
 
 interface AnalysisResult {
   pestName?: string;
@@ -93,7 +94,7 @@ const Index = () => {
         </div>
 
         <Tabs defaultValue="image" className="w-full">
-          <TabsList className="grid w-full max-w-3xl mx-auto grid-cols-3 bg-white/50">
+          <TabsList className="grid w-full max-w-4xl mx-auto grid-cols-4 bg-white/50">
             <TabsTrigger value="image" className="flex items-center gap-2">
               <Image className="w-4 h-4" />
               Image Upload
@@ -105,6 +106,10 @@ const Index = () => {
             <TabsTrigger value="yield" className="flex items-center gap-2">
               <BarChart2 className="w-4 h-4" />
               Yield Prediction
+            </TabsTrigger>
+            <TabsTrigger value="weather" className="flex items-center gap-2">
+              <CloudSun className="w-4 h-4" />
+              Weather
             </TabsTrigger>
           </TabsList>
 
@@ -158,6 +163,14 @@ const Index = () => {
             <div className="max-w-4xl mx-auto">
               <div className="bg-white/80 p-6 rounded-lg shadow-sm">
                 <ManualInput onSubmit={handleManualSubmit} isLoading={loading} />
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="weather" className="mt-6">
+            <div className="max-w-4xl mx-auto">
+              <div className="bg-white/80 p-6 rounded-lg shadow-sm">
+                <Weather />
               </div>
             </div>
           </TabsContent>
