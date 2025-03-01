@@ -5,11 +5,24 @@ npm i
 npm run dev
 ```
 
-Backend(Python version - 3.10.7)
+Backend (Python version - 3.10.7)
 ```sh
 cd backend
 
 py -3.10 -m venv venv
+
+venv/Scripts/activate
+
+pip install -r requirements.txt
+
+python app.py
+```
+
+Backend2 (Python version - 3.7.9)
+```sh 
+cd backend2
+
+py -3.7 -m venv venv
 
 venv/Scripts/activate
 
