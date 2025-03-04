@@ -46,16 +46,20 @@ export function Weather() {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
-  // List of cities to choose from
+  // List of cities in Andhra Pradesh, India
   const cities: City[] = [
-    { name: "New York", lat: 40.7128, lon: -74.0060 },
-    { name: "London", lat: 51.5074, lon: -0.1278 },
-    { name: "Tokyo", lat: 35.6762, lon: 139.6503 },
-    { name: "Paris", lat: 48.8566, lon: 2.3522 },
-    { name: "Delhi", lat: 28.7041, lon: 77.1025 },
-    { name: "Mumbai", lat: 19.0760, lon: 72.8777 },
-    { name: "Sydney", lat: -33.8688, lon: 151.2093 },
-    { name: "Berlin", lat: 52.5200, lon: 13.4050 },
+    { name: "Visakhapatnam", lat: 17.6868, lon: 83.2185 },
+    { name: "Vijayawada", lat: 16.5062, lon: 80.6480 },
+    { name: "Guntur", lat: 16.3067, lon: 80.4365 },
+    { name: "Tirupati", lat: 13.6288, lon: 79.4192 },
+    { name: "Nellore", lat: 14.4426, lon: 79.9865 },
+    { name: "Kurnool", lat: 15.8281, lon: 78.0373 },
+    { name: "Rajahmundry", lat: 17.0005, lon: 81.8040 },
+    { name: "Kakinada", lat: 16.9891, lon: 82.2475 },
+    { name: "Eluru", lat: 16.7107, lon: 81.1031 },
+    { name: "Anantapur", lat: 14.6819, lon: 77.6006 },
+    { name: "Kadapa", lat: 14.4673, lon: 78.8242 },
+    { name: "Ongole", lat: 15.5057, lon: 80.0499 },
   ];
 
   const fetchWeather = async () => {
