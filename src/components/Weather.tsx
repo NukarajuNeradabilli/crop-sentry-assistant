@@ -7,7 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 
 // OpenWeatherAPI key - this is a demo key and should be replaced with a real one
-const API_KEY = "85a5a0e4aef25a9e4de84ff10d85b01c";
+const API_KEY = "8a60536ccd769d757c70f5f61346d325";
 
 interface WeatherData {
   main: {
